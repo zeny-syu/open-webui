@@ -16,20 +16,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           lfs: true
-          submodules: 'recursive'
+          submodules: recursive
 
       # 步驟 2: 使用官方 Action 推送到 Hugging Face Hub
       # 這個 Action 會自動處理認證、LFS 和所有 Git 細節，並且能正確處理子模組
       - name: Push to Hugging Face Hub
-        #uses: huggingface/hub-action@v0 #v0.5, v0.14
         uses: nateraw/huggingface-sync-action@v0.0.5
         with:
-          github_repo_id: 'zeny-syu/open-webui'
-          huggingface_repo_id: 'ZenCook/open-webui'
+          github_repo_id: zeny-syu/open-webui
+          huggingface_repo_id: ZenCook/open-webui
           hf_token: ${{ secrets.HF_TOKEN }}
-          repo_type: 'space'
+          repo_type: space
           private: false
-          space_sdk: 'docker'
-          subdirectory: ''
-          # 這個選項等同於 git push --force，會覆蓋掉 Space 上的舊內容
-          force_push: true
+          space_sdk: docker
+          #subdirectory: ''
