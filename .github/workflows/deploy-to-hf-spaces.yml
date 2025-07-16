@@ -30,6 +30,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           lfs: true
+          submodules: 'recursive' # <- for submodule downloading
 
       - name: Remove git history
         run: rm -rf .git
