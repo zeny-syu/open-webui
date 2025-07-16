@@ -8,60 +8,24 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-secret:
-    runs-on: ubuntu-latest
-    outputs:
-      token-set: ${{ steps.check-key.outputs.defined }}
-    steps:
-      - id: check-key
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        if: "${{ env.HF_TOKEN != '' }}"
-        run: echo "defined=true" >> $GITHUB_OUTPUT
-
   deploy:
     runs-on: ubuntu-latest
-    needs: [check-secret]
-    if: needs.check-secret.outputs.token-set == 'true'
-    env:
-      HF_TOKEN: ${{ secrets.HF_TOKEN }}
     steps:
+      # 步驟 1: 下載你的主倉庫，同時也下載所有子模組 (submodules) 和 LFS 檔案
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           lfs: true
-          submodules: 'recursive' # <- for submodule downloading
+          submodules: 'recursive'
 
-      - name: Remove git history
-        run: rm -rf .git
-
-      - name: Prepend YAML front matter to README.md
-        run: |
-          echo "---" > temp_readme.md
-          echo "title: Open WebUI" >> temp_readme.md
-          echo "emoji: 🐳" >> temp_readme.md
-          echo "colorFrom: purple" >> temp_readme.md
-          echo "colorTo: gray" >> temp_readme.md
-          echo "sdk: docker" >> temp_readme.md
-          echo "app_port: 8080" >> temp_readme.md
-          echo "---" >> temp_readme.md
-          cat README.md >> temp_readme.md
-          mv temp_readme.md README.md
-
-      - name: Configure git
-        run: |
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-      - name: Set up Git and push to Space
-        run: |
-          git init --initial-branch=main
-          git lfs install
-          git lfs track "*.ttf"
-          git lfs track "*.jpg"
-          git lfs track "*.woff2"
-          git lfs track "*.png"
-          rm demo.gif
-          git add .
-          git commit -m "GitHub deploy: ${{ github.sha }}"
-          #git push --force https://open-webui:${HF_TOKEN}@huggingface.co/spaces/open-webui/open-webui main
-          git push --force https://ZenCook:${HF_TOKEN}@huggingface.co/spaces/ZenCook/open-webui main
+      # 步驟 2: 使用官方 Action 推送到 Hugging Face Hub
+      # 這個 Action 會自動處理認證、LFS 和所有 Git 細節，並且能正確處理子模組
+      - name: Push to Hugging Face Hub
+        uses: huggingface/hub-action@v0.5
+        with:
+          # 請再次確認這是你正確的 Repo ID
+          repo_id: ZenCook/open-webui
+          repo_type: space
+          token: ${{ secrets.HF_TOKEN }}
+          # 這個選項等同於 git push --force，會覆蓋掉 Space 上的舊內容
+          force_push: true
