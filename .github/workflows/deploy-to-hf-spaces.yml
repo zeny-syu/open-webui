@@ -31,6 +31,7 @@ jobs:
         with:
           lfs: true
           submodules: recursive
+          fetch-depth: 0
 
       #- name: Remove git history
       #  run: rm -rf .git
