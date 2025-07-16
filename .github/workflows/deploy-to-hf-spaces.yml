@@ -48,19 +48,30 @@ jobs:
           cat README.md >> temp_readme.md
           mv temp_readme.md README.md
 
-      - name: Configure git
+      #- name: Configure git
+      #  run: |
+      #    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      #    git config --global user.name "github-actions[bot]"
+      #- name: Set up Git and push to Space
+      #  run: |
+      #    git init --initial-branch=main
+      #    git lfs install
+      #    git lfs track "*.ttf"
+      #    git lfs track "*.jpg"
+      #    git lfs track "*.woff2"
+      #    git lfs track "*.png"
+      #    rm demo.gif
+      #    git add .
+      #    git commit -m "GitHub deploy: ${{ github.sha }}"
+      #    git push --force https://ZenCook:${HF_TOKEN}@huggingface.co/spaces/ZenCook/open-webui main
+
+      - name: Commit potential README changes
         run: |
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-      - name: Set up Git and push to Space
+          git add README.md
+          git diff --quiet --staged || git commit -m "Auto-update README.md for HF Space"
+
+      - name: Push to Space
         run: |
-          git init --initial-branch=main
-          git lfs install
-          git lfs track "*.ttf"
-          git lfs track "*.jpg"
-          git lfs track "*.woff2"
-          git lfs track "*.png"
-          rm demo.gif
-          git add .
-          git commit -m "GitHub deploy: ${{ github.sha }}"
-          git push --force https://ZenCook:${HF_TOKEN}@huggingface.co/spaces/ZenCook/open-webui main
+          git push --force https://ZenCook:${HF_TOKEN}@huggingface.co/spaces/ZenCook/open-webui HEAD:main
