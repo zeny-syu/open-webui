@@ -57,6 +57,8 @@ jobs:
           git lfs install
           git lfs track "*.ttf"
           git lfs track "*.jpg"
+          git lfs track "*.woff2"
+          git lfs track "*.png"
           rm demo.gif
           git add .
           git commit -m "GitHub deploy: ${{ github.sha }}"
