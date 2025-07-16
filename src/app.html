@@ -87,7 +87,15 @@
 
 				document.addEventListener('DOMContentLoaded', function () {
 					const splash = document.getElementById('splash-screen');
-					if (splash) splash.prepend(logo);
+					if (splash) {
+						splash.prepend(logo);
+
+						const myLogo = document.createElement('img');  
+						myLogo.id = 'my-logo';  
+						myLogo.style = 'position: absolute; width: auto; height: 3rem; top: 54%; left: 50%; transform: translateX(-50%); display: block;';  
+						myLogo.src = '/static/mylog.png';  
+						splash.appendChild(myLogo);
+					}
 				});
 			})();
 		</script>
