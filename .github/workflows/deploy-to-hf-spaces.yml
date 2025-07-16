@@ -26,7 +26,10 @@ jobs:
         with:
           github_repo_id: 'zeny-syu/open-webui'
           huggingface_repo_id: 'ZenCook/open-webui'
-          repo_type: 'space'
           hf_token: ${{ secrets.HF_TOKEN }}
+          repo_type: 'space'
+          private: false
+          space_sdk: 'docker'
+          subdirectory: ''
           # 這個選項等同於 git push --force，會覆蓋掉 Space 上的舊內容
           force_push: true
